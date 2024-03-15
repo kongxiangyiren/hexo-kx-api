@@ -1,0 +1,20 @@
+{
+  "nunjucksTemplate.preserveEmptyLine": 3,
+  "files.associations": {
+    "*.html": "njk"
+  },
+  "emmet.includeLanguages": {
+    "njk": "html"
+  },
+  "html.format.wrapLineLength": 120,
+  "vsicons.associations.files": [
+    { "icon": "nunjucks", "extensions": ["html", "njk"], "format": "svg" }
+  ],
+  "[html]": {
+    "editor.defaultFormatter": "eseom.nunjucks-template"
+  },
+  "[njk]": {
+    "editor.defaultFormatter": "eseom.nunjucks-template"
+  },
+  "typescript.tsdk": "node_modules/typescript/lib",
+}
