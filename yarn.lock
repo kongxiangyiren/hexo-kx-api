@@ -1482,11 +1482,6 @@
   dependencies:
     undici-types "~5.26.4"
 
-"@types/nunjucks@^3.2.6":
-  version "3.2.6"
-  resolved "https://registry.npmmirror.com/@types/nunjucks/-/nunjucks-3.2.6.tgz#6d6e0363719545df8b9a024279902edf68b2caa9"
-  integrity sha512-pHiGtf83na1nCzliuAdq8GowYiXvH5l931xZ0YEHaLMNFgynpEqx+IPStlu7UaDkehfvl01e4x/9Tpwhy7Ue3w==
-
 "@types/qs@*":
   version "6.9.12"
   resolved "https://registry.npmmirror.com/@types/qs/-/qs-6.9.12.tgz#afa96b383a3a6fdc859453a1892d41b607fc7756"
