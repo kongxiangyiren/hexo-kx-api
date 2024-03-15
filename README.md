@@ -6,7 +6,7 @@
 
 ## 问题反馈
 
-[issues](git remote add origin https://github.com/kongxiangyiren/hexo-kx-api/issues)
+[issues](https://github.com/kongxiangyiren/hexo-kx-api/issues)
 
 ## 本网站使用的ip数据库
 
