@@ -7,15 +7,19 @@ import { readFileSync } from 'fs';
 import { ROOT_PATH } from './base.controller';
 import { morganMiddleware } from './config/middleware';
 import { Request } from 'express';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  const getInstance = app.getHttpAdapter().getInstance();
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  // 修复 req.ip 问题
+  app.set('trust proxy', 1);
   // 隐藏 x-powered-by
-  getInstance.disable('x-powered-by');
-
+  app.disable('x-powered-by');
+  // 使用 morgan 中间件
   app.use(morganMiddleware);
+  // 允许跨域
   app.enableCors();
+
   const pac = readFileSync(join(ROOT_PATH, 'package.json'), 'utf-8');
   const options = new DocumentBuilder()
     .setTitle(JSON.parse(pac).name)
@@ -36,6 +40,7 @@ async function bootstrap() {
     },
     patchDocumentOnRequest: (request, res, document) => {
       const req = request as Request;
+
       const reg = new RegExp('http://127.0.0.1:3000', 'g');
       const json = JSON.parse(
         JSON.stringify(document).replace(reg, `${req.protocol}://${req.headers.host}`)
