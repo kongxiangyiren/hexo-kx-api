@@ -58,7 +58,7 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 public/data/IP2LOCATION-LITE-DB5.IPV6.BIN
 public/data/LICENSE_LITE.TXT
 public/data/README_LITE.TXT
+*.tgz
+
 
 build_ncc
-
-*.tgz

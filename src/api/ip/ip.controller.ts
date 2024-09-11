@@ -2,10 +2,10 @@ import { Controller, Get, Req } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { isIP } from 'net';
-import { Base, ROOT_PATH } from 'src/base.controller';
+import { Base } from 'src/base.controller';
 import { IP2Location } from 'ip2location-nodejs';
 import { join } from 'path';
-// @ts-expect-error
+
 import * as IpCn from '../../../public/data/ip-cn.json';
 import { readFileSync } from 'fs';
 
@@ -14,7 +14,7 @@ export class IpController extends Base {
   @Get('ip')
   @ApiOperation({
     summary: '获取ip信息',
-    description: readFileSync(join(ROOT_PATH, '/public/md/ip.md'), 'utf-8')
+    description: readFileSync(join(__dirname, '../public/md/ip.md'), 'utf-8')
   })
   //   api文档中的标签
   @ApiTags('ip API')
@@ -135,7 +135,7 @@ export class IpController extends Base {
     const ip2location = new IP2Location();
     // 每月更新 https://lite.ip2location.com/database/db5-ip-country-region-city-latitude-longitude?lang=zh_CN
     // 下载ipv6的bin文件
-    ip2location.open(join(ROOT_PATH, '/public/data/IP2LOCATION-LITE-DB5.IPV6.BIN'));
+    ip2location.open(join(__dirname, '../public/data/IP2LOCATION-LITE-DB5.IPV6.BIN'));
     const data = ip2location.getAll(ip);
 
     data.countryLong = this.gj(data.countryShort)[0] ? this.gj(data.countryShort)[0].cn : '';

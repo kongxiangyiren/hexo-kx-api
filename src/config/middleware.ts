@@ -66,7 +66,6 @@ morgan.token('method', function (req, res) {
 });
 
 morgan.token('pid', function (req, res) {
-
   return green(`[Nest] ${process.pid}  -`);
 });
 morgan.format(

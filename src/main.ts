@@ -4,11 +4,11 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { RapidocModule } from '@b8n/nestjs-rapidoc';
 import { join } from 'path';
 import { readFileSync } from 'fs';
-import { ROOT_PATH } from './base.controller';
+
 import { morganMiddleware } from './config/middleware';
 import { Request } from 'express';
 import { NestExpressApplication } from '@nestjs/platform-express';
-
+import { Logger } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   // 修复 req.ip 问题
@@ -20,10 +20,10 @@ async function bootstrap() {
   // 允许跨域
   app.enableCors();
 
-  const pac = readFileSync(join(ROOT_PATH, 'package.json'), 'utf-8');
+  const pac = readFileSync(join(__dirname, '../package.json'), 'utf-8');
   const options = new DocumentBuilder()
     .setTitle(JSON.parse(pac).name)
-    .setDescription(readFileSync(join(ROOT_PATH, 'README.md'), 'utf-8'))
+    .setDescription(readFileSync(join(__dirname, '../README.md'), 'utf-8'))
     .setVersion(JSON.parse(pac).version)
     .addServer('/', 'api server')
     .build();
@@ -50,6 +50,8 @@ async function bootstrap() {
     }
   });
 
-  await app.listen(3000);
+  await app.listen(process.env.PORT || 3000, '0.0.0.0').then(async () => {
+    Logger.log(`Server running on ${await app.getUrl()}`, 'Bootstrap');
+  });
 }
 bootstrap();

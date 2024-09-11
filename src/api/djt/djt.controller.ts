@@ -2,7 +2,7 @@ import { Controller, Get } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
-import { Base ,ROOT_PATH} from 'src/base.controller';
+import { Base } from 'src/base.controller';
 
 @Controller('api')
 export class DjtController extends Base {
@@ -20,20 +20,20 @@ export class DjtController extends Base {
         data: {
           type: 'string',
           description: '毒鸡汤内容',
-          example: '最近一个月，总有那么三十天很不顺。',
+          example: '最近一个月，总有那么三十天很不顺。'
         },
         msg: {
           type: 'string',
           description: '状态信息',
-          example: 'ok',
+          example: 'ok'
         },
         code: {
           type: 'number',
           description: '状态码',
-          example: 0,
-        },
-      },
-    },
+          example: 0
+        }
+      }
+    }
   })
   // 失败返回
   @ApiResponse({
@@ -45,24 +45,24 @@ export class DjtController extends Base {
         code: {
           type: 'number',
           description: '状态码',
-          example: 201,
+          example: 201
         },
         msg: {
           type: 'string',
           description: '失败返回信息',
-          example: '数据库错误',
-        },
-      },
-    },
+          example: '数据库错误'
+        }
+      }
+    }
   })
   // 500错误返回
   @ApiResponse({
     status: 500,
-    description: '服务器错误',
+    description: '服务器错误'
   })
   getDjt() {
     // https://github.com/able8/nows-nodejs-serverless
-    const djtPath = join(ROOT_PATH, '/public/data/毒鸡汤.txt');
+    const djtPath = join(__dirname, '../public/data/毒鸡汤.txt');
     if (!existsSync(djtPath)) {
       return this.fail(201, '数据库错误');
     }

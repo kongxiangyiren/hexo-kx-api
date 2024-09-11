@@ -6,7 +6,7 @@ import axios from 'axios';
 import { load } from 'cheerio';
 import { join } from 'path';
 import { readFileSync } from 'fs';
-import { Base, ROOT_PATH } from 'src/base.controller';
+import { Base } from 'src/base.controller';
 
 @Controller()
 export class ApiController extends Base {
@@ -14,7 +14,7 @@ export class ApiController extends Base {
   //  api文档中的接口描述
   @ApiOperation({
     summary: 'github 日历表',
-    description: readFileSync(join(ROOT_PATH, '/public/md/githubcalendar.md'), 'utf-8'),
+    description: readFileSync(join(__dirname, '../public/md/githubcalendar.md'), 'utf-8')
   })
   // api文档中的标签
   @ApiTags('github API')
@@ -24,7 +24,7 @@ export class ApiController extends Base {
     required: true,
     description: 'github 用户名',
     example: 'kongxiangyiren',
-    type: String,
+    type: String
   })
   // 成功返回
   @ApiOkResponse({
@@ -35,7 +35,7 @@ export class ApiController extends Base {
       properties: {
         total: {
           type: 'number',
-          description: '总提交次数',
+          description: '总提交次数'
         },
         contributions: {
           type: 'array',
@@ -46,28 +46,28 @@ export class ApiController extends Base {
               properties: {
                 date: {
                   type: 'string',
-                  description: '日期',
+                  description: '日期'
                 },
                 count: {
                   type: 'number',
-                  description: '当天提交次数',
-                },
-              },
-            },
+                  description: '当天提交次数'
+                }
+              }
+            }
           },
-          description: '提交次数',
+          description: '提交次数'
         },
         code: {
           type: 'number',
-          description: '状态码',
+          description: '状态码'
         },
         msg: {
           type: 'string',
           description: '状态信息',
-          example: 'ok',
-        },
-      },
-    },
+          example: 'ok'
+        }
+      }
+    }
   })
   // 失败返回
   @ApiResponse({
@@ -79,14 +79,14 @@ export class ApiController extends Base {
         code: {
           type: 'number',
           description: '状态码',
-          example: 201,
+          example: 201
         },
         msg: {
           type: 'string',
-          description: '失败返回信息',
-        },
-      },
-    },
+          description: '失败返回信息'
+        }
+      }
+    }
   })
   async getGithub(@Req() req: Request) {
     //  如果没有传入参数
@@ -95,7 +95,7 @@ export class ApiController extends Base {
     }
     const user = Object.keys(req.query)[0];
     // 获取缓存
-    let data = await this.cache(`githubcalendar:${user}`);
+    const data = await this.cache(`githubcalendar:${user}`);
     //  存在就返回缓存数据
     if (data) {
       return data;
@@ -114,15 +114,23 @@ export class ApiController extends Base {
   async getdata(name: string) {
     // 忽略证书 本地开了代理时使用
     const agent = new Agent({
-      rejectUnauthorized: false,
+      rejectUnauthorized: false
     });
 
     // 请求github
     const { data: res } = await axios
-      .get('https://github.com/' + name, {
+      .get(`https://github.com/users/${name}/contributions`, {
+        headers: {
+          'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
+          referer: `https://github.com/${name}`,
+          'x-requested-with': 'XMLHttpRequest',
+          // 伪造登录状态（？），否则 GitHub 不尊重时区
+          cookie: 'logged_in=yes; tz=Asia%2FShanghai '
+        },
         httpsAgent: agent,
         // 设置超时时间 20s
-        timeout: 20000,
+        timeout: 20000
       })
       .catch((err) => err);
 
@@ -133,13 +141,13 @@ export class ApiController extends Base {
         total: 0,
         contributions: [],
         code: 201,
-        msg: '请求失败',
+        msg: '请求失败'
       };
     }
     // 解析页面数据
     const $ = load(res);
     const data = $(
-      '#user-profile-frame > div > div.mt-4.position-relative > div.js-yearly-contributions > div > div > div > div:nth-child(1)  table > tbody > tr',
+      'body > div > div:nth-child(1) > div > div > div:nth-child(1) > table > tbody > tr'
     );
     const contributions = [];
     let total = 0;
@@ -156,7 +164,7 @@ export class ApiController extends Base {
             total += count;
             contributions.push({
               date: $(item2).attr('data-date'),
-              count,
+              count
             });
           }
         }
@@ -174,7 +182,7 @@ export class ApiController extends Base {
       total,
       contributions: this.listSplit(sortedData, 7),
       code: 0,
-      msg: 'ok',
+      msg: 'ok'
     };
   }
 

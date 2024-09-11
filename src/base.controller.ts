@@ -1,4 +1,3 @@
-import { join } from 'path';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { Inject, Injectable } from '@nestjs/common';
@@ -38,5 +37,3 @@ export class Base {
     }
   }
 }
-/** 项目根目录 */
-export  const  ROOT_PATH = join(__dirname, '..') ;
